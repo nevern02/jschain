@@ -11,7 +11,7 @@ export class Block {
     this.data      = data.data;
     this.prevHash  = data.prevHash;
     this.hash      = data.hash || this.calculateHash();
-    this.nonce     = data.nonce || null;
+    this.nonce     = data.nonce;
   }
 
   calculateHash() {
@@ -25,7 +25,7 @@ export class Block {
   }
 
   generateHeader() {
-    return `${this.index}:${this.prevHash}:${this.data}:${this.timestamp}`;
+    return `${this.index}:${this.prevHash}:${this.data}:${this.timestamp}:${this.nonce}`;
   }
 
   save() {
