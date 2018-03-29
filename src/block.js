@@ -1,4 +1,6 @@
-const fs = (typeof module !== 'undefined' && module.exports) && require('fs');
+import { IS_NODE, SHA256 } from './init.js'
+
+const fs = IS_NODE && require('fs');
 
 export const DATADIR = '/tmp/chaindata';
 
@@ -8,16 +10,22 @@ export class Block {
     this.timestamp = data.timestamp;
     this.data      = data.data;
     this.prevHash  = data.prevHash;
-    this.hash      = data.hash || this._createSelfHash();
+    this.hash      = data.hash || this.calculateHash();
     this.nonce     = data.nonce || null;
+  }
+
+  calculateHash() {
+    let hash = SHA256.create();
+    hash.update(this.generateHeader());
+    return hash.hex();
   }
 
   static createFirstBlock() {
     return new Block({index: 0, timestamp: Date.now(), data: {}, prevHash: null})
   }
 
-  _createSelfHash() {
-    return 'test';
+  generateHeader() {
+    return `${this.index}:${this.prevHash}:${this.data}:${this.timestamp}`;
   }
 
   save() {

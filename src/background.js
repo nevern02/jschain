@@ -1,3 +1,2 @@
 import { Block } from './block.js'
-
-console.log(new Block());
+console.log(new Block({}));
