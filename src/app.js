@@ -1,11 +1,10 @@
+import * as config from './init.js';
 import { DATADIR, Block } from './block.js';
 import sync from './sync.js';
 import mine from './mine.js';
 
-const fs       = require('fs');
-const http     = require('http');
-const hostname = '127.0.0.1';
-const port     = 3000;
+const fs   = require('fs');
+const http = require('http');
 
 var blockChain = null;
 
@@ -14,16 +13,6 @@ const server = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/json');
   res.end(JSON.stringify(blockChain));
 });
-
-var syncChain = (blocks) => { 
-  let lastBlock = blocks[blocks.length - 1];
-  let newBlock  = mine(lastBlock);
-  blocks.push(newBlock);
-
-  blockChain = blocks;
-}
-
-var syncWrap = () => { sync(syncChain) };
 
 fs.mkdir(DATADIR, (err) => {
   if (err && err.code !== 'EEXIST') throw err;
@@ -47,6 +36,6 @@ fs.mkdir(DATADIR, (err) => {
   });
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+server.listen(config.PORT, config.HOST, () => {
+  console.log(`Server running at http://${config.HOST}:${config.PORT}/`);
 });
